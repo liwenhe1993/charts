@@ -162,6 +162,5 @@ The following tables lists the configurable parameters of the Clickhouse chart a
 | `tabix.ingress.path`                                                              | Ingress path                                                                                                                   | ``                                                    |
 | `tabix.ingress.tls.enabled`                                                       | Enable ingress tls                                                                                                             | `false`                                               |
 | `tabix.ingress.tls.hosts`                                                         | Ingress tls hosts                                                                                                              | `[]`                                                  |
-|
 
 For more information please refer to the [liwenhe/clickhouse-charts](https://github.com/liwenhe1993/clickhouse-charts.git) documentation.
