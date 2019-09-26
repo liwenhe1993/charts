@@ -15,9 +15,9 @@ This chart bootstraps a [ClickHouse](https://clickhouse.yandex/) replication clu
 To install the chart with the release name `my-release`:
 
 ```bash
-$ git clone https://github.com/liwenhe1993/clickhouse-charts.git
-$ cd clickhouse-charts
-$ helm install --name clickhouse .
+$ helm repo add liwenhe1993 https://liwenhe1993.github.io/clickhouse-charts/
+$ helm repo update
+$ helm install --name clickhouse liwenhe1993/clickhouse
 ```
 These commands deploy Clickhouse on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
 
