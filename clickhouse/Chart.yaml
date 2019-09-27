@@ -12,5 +12,5 @@ maintainers:
   name: liwenhe
 name: clickhouse
 sources:
-- https://clickhouse.yandex/
+- https://github.com/liwenhe1993/clickhouse-charts
 version: 1.0.0
