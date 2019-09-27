@@ -1,4 +1,4 @@
-{{- if .Values.clickhouse.configmap.remote_servers.replica_backup.enabled }}
+{{- if .Values.clickhouse.configmap.remote_servers.replica.backup.enabled }}
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:

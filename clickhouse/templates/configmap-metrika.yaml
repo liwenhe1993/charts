@@ -37,11 +37,35 @@ data:
                     <replica>
                         <host>{{ include "clickhouse.fullname" $ }}-{{ . }}.{{ include "clickhouse.fullname" $ }}-headless.{{ $.Release.Namespace }}.svc.{{ $.Values.clusterDomain }}</host>
                         <port>{{ $.Values.clickhouse.tcp_port}}</port>
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.user }}
+                        <user>{{ $.Values.clickhouse.configmap.remote_servers.replica.user }}</user>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.password }}
+                        <password>{{ $.Values.clickhouse.configmap.remote_servers.replica.password }}</password>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.secure }}
+                        <secure>{{ $.Values.clickhouse.configmap.remote_servers.replica.secure }}</secure>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.compression }}
+                        <compression>{{ $.Values.clickhouse.configmap.remote_servers.replica.compression }}</compression>
+                      {{- end }}
                     </replica>
-                    {{- if $.Values.clickhouse.configmap.remote_servers.replica_backup.enabled }}
+                    {{- if $.Values.clickhouse.configmap.remote_servers.replica.backup.enabled }}
                     <replica>
                         <host>{{ include "clickhouse.fullname" $ }}-replica-{{ . }}.{{ include "clickhouse.fullname" $ }}-replica-headless.{{ $.Release.Namespace }}.svc.{{ $.Values.clusterDomain }}</host>
                         <port>{{ $.Values.clickhouse.tcp_port}}</port>
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.user }}
+                        <user>{{ $.Values.clickhouse.configmap.remote_servers.replica.user }}</user>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.password }}
+                        <password>{{ $.Values.clickhouse.configmap.remote_servers.replica.password }}</password>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.secure }}
+                        <secure>{{ $.Values.clickhouse.configmap.remote_servers.replica.secure }}</secure>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.compression }}
+                        <compression>{{ $.Values.clickhouse.configmap.remote_servers.replica.compression }}</compression>
+                      {{- end }}
                     </replica>
                     {{- end }}
                 </shard>   

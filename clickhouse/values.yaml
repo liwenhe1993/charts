@@ -206,11 +206,22 @@ clickhouse:
         port: ""
     ##
     ## Configuration of clusters used by the Distributed table engine.
+    ## The parameters host, port, and optionally user, password, secure, compression are specified for each server:
+    # host – The address of the remote server.
+    # port – The TCP port for messenger activity ('tcp_port' in the config, usually set to 9000).
+    # user – Name of the user for connecting to a remote server. Access is configured in the users.xml file. For more information, see the section "Access rights".
+    # password – The password for connecting to a remote server (not masked).
+    # secure - Use ssl for connection, usually you also should define port = 9440. Server should listen on 9440 and have correct certificates.
+    # compression - Use data compression. Default value: true.
     remote_servers:
       enabled: true
       internal_replication: false
-      replica_backup:
-        enabled: true
+      replica: 
+        user: "default"
+        password: "default"
+        compression: true
+        backup:
+          enabled: true
     ##
     ## Sending data to Graphite.
     # interval – The interval for sending, in seconds.
