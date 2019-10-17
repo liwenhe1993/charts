@@ -13,15 +13,15 @@ clusterDomain: "cluster.local"
 # tolerations: []
 ## Clickhouse pod/node affinity/anti-affinity
 ## 
-affinity:
-  nodeAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      nodeSelectorTerms:
-      - matchExpressions:
-        - key: "application/clickhouse"
-          operator: In
-          values:
-          - "true"
+#affinity:
+#  nodeAffinity:
+#    requiredDuringSchedulingIgnoredDuringExecution:
+#      nodeSelectorTerms:
+#      - matchExpressions:
+#        - key: "application/clickhouse"
+#          operator: In
+#          values:
+#          - "true"
 
 clickhouse:
   ## StatefulSet controller supports relax its ordering guarantees while preserving its uniqueness and identity guarantees. There are two valid pod management policies: OrderedReady and Parallel
@@ -218,7 +218,7 @@ clickhouse:
       internal_replication: false
       replica: 
         user: "default"
-        password: "default"
+        #password: ""
         compression: true
         backup:
           enabled: true
@@ -262,7 +262,7 @@ clickhouse:
       user: 
       - name: "default"
         config:
-          password: "default"
+          #password: ""
           networks: 
           - "::/0"
           profile: "default"
