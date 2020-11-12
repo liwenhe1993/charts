@@ -9,7 +9,7 @@ metadata:
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
   rules: 
-    host: {{ .Values.clickhouse.ingress.host }}
+  - host: {{ .Values.clickhouse.ingress.host }}
     http: 
       paths: 
       - path: {{ .Values.clickhouse.ingress.path }}

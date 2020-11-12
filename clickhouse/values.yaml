@@ -172,10 +172,14 @@ clickhouse:
     # size – Size of the file. Applies to loganderrorlog. Once the file reaches size, ClickHouse archives and renames it, and creates a new log file in its place.
     # count – The number of archived log files that ClickHouse stores.
     logger:
-      path: "/var/log/clickhouse-server"
-      level: "trace"
-      size: "1000M"
-      count: "10"
+      type: console
+      console:
+        level: "trace"
+      file:
+        path: "/var/log/clickhouse-server"
+        level: "trace"
+        size: "100M"
+        count: "10"
     ##
     ## Data compression settings.
     # min_part_size – The minimum size of a table part.
