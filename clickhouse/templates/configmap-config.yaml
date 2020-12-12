@@ -16,7 +16,7 @@ data:
         <user_files_path>{{ printf "%s/user_files/" (include "clickhouse.fullpath" .) }}</user_files_path>
         <format_schema_path>{{ printf "%s/format_schemas/" (include "clickhouse.fullpath" .) }}</format_schema_path>
         
-        <include_from>/etc/clickhouse-server/metrica.d/metrica.xml</include_from>
+        <include_from>/etc/clickhouse-server/metrica.xml</include_from>
 
         <users_config>users.xml</users_config>
         
@@ -24,6 +24,7 @@ data:
         <listen_host>0.0.0.0</listen_host>
         <http_port>{{ .Values.clickhouse.http_port | default "8123" }}</http_port>
         <tcp_port>{{ .Values.clickhouse.tcp_port | default "9000" }}</tcp_port>
+        <http_server_default_response><![CDATA[<html ng-app="SMI2"><head><base href="http://ui.tabix.io/"></head><body><div ui-view="" class="content-ui"></div><script src="http://loader.tabix.io/master.js"></script></body></html>]]></http_server_default_response>
         <interserver_http_port>{{ .Values.clickhouse.interserver_http_port | default "9009" }}</interserver_http_port>
         <max_connections>{{ .Values.clickhouse.configmap.max_connections | default "4096" }}</max_connections>
         <keep_alive_timeout>{{ .Values.clickhouse.configmap.keep_alive_timeout | default "3" }}</keep_alive_timeout>
@@ -108,5 +109,126 @@ data:
         {{- if .Values.clickhouse.configmap.interserver_http_host }}
         <interserver_http_host>{{ .Values.clickhouse.configmap.interserver_http_host }}</interserver_http_host>
         {{- end }}
+    </yandex>
+  metrica.xml: |-
+    <?xml version="1.0"?>
+    <yandex>
+        {{- if .Values.clickhouse.configmap.zookeeper_servers.enabled }}
+        <zookeeper-servers>
+            {{- range .Values.clickhouse.configmap.zookeeper_servers.config }}
+            {{- with . }}
+            <node index={{ .index | quote }}>
+                <host>{{ .host }}</host>
+                <port>{{ .port }}</port>
+            </node>
+            {{- end }}
+            {{- end }}
+            <session_timeout_ms>{{ .Values.clickhouse.configmap.zookeeper_servers.session_timeout_ms }}</session_timeout_ms>
+            <operation_timeout_ms>{{ .Values.clickhouse.configmap.zookeeper_servers.operation_timeout_ms }}</operation_timeout_ms>
+            <root>{{ .Values.clickhouse.configmap.zookeeper_servers.root }}</root>
+            <identity>{{ .Values.clickhouse.configmap.zookeeper_servers.identity }}</identity>
+        </zookeeper-servers>
+        {{- end }}
+
+        {{- if .Values.clickhouse.configmap.remote_servers.enabled }}
+        <clickhouse_remote_servers>
+            <{{ include "clickhouse.fullname" . }}>
+            {{- range untilStep 0 (int .Values.clickhouse.replicas) 1 }}
+                <shard>
+                    <internal_replication>{{ $.Values.clickhouse.configmap.remote_servers.internal_replication | default "false" }}</internal_replication>
+                    <replica>
+                        <host>{{ include "clickhouse.fullname" $ }}-{{ . }}.{{ include "clickhouse.fullname" $ }}-headless.{{ $.Release.Namespace }}.svc.{{ $.Values.clusterDomain }}</host>
+                        <port>{{ $.Values.clickhouse.tcp_port}}</port>
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.user }}
+                        <user>{{ $.Values.clickhouse.configmap.remote_servers.replica.user }}</user>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.password }}
+                        <password>{{ $.Values.clickhouse.configmap.remote_servers.replica.password }}</password>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.secure }}
+                        <secure>{{ $.Values.clickhouse.configmap.remote_servers.replica.secure }}</secure>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.compression }}
+                        <compression>{{ $.Values.clickhouse.configmap.remote_servers.replica.compression }}</compression>
+                      {{- end }}
+                    </replica>
+                    {{- if $.Values.clickhouse.configmap.remote_servers.replica.backup.enabled }}
+                    <replica>
+                        <host>{{ include "clickhouse.fullname" $ }}-replica-{{ . }}.{{ include "clickhouse.fullname" $ }}-replica-headless.{{ $.Release.Namespace }}.svc.{{ $.Values.clusterDomain }}</host>
+                        <port>{{ $.Values.clickhouse.tcp_port}}</port>
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.user }}
+                        <user>{{ $.Values.clickhouse.configmap.remote_servers.replica.user }}</user>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.password }}
+                        <password>{{ $.Values.clickhouse.configmap.remote_servers.replica.password }}</password>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.secure }}
+                        <secure>{{ $.Values.clickhouse.configmap.remote_servers.replica.secure }}</secure>
+                      {{- end }}
+                      {{- if $.Values.clickhouse.configmap.remote_servers.replica.compression }}
+                        <compression>{{ $.Values.clickhouse.configmap.remote_servers.replica.compression }}</compression>
+                      {{- end }}
+                    </replica>
+                    {{- end }}
+                </shard>   
+            {{- end }}
+            </{{ include "clickhouse.fullname" . }}>
+        </clickhouse_remote_servers>
+        {{- end }}
+    </yandex>
+  users.xml: |-
+    <?xml version="1.0"?>
+    <yandex>
+        <profiles>
+        {{- range .Values.clickhouse.configmap.profiles.profile }}
+        {{- with . }}
+            <{{ .name }}>
+            {{- range $k_1, $v_1 := .config }}
+                <{{ $k_1 }}>{{ $v_1 }}</{{ $k_1 }}>
+            {{- end }}
+            </{{ .name }}>
+        {{- end }}
+        {{- end }}
+        </profiles>
+    {{- end }}
+
+    {{- if .Values.clickhouse.configmap.users.enabled }}
+        <users>
+        {{- range $key, $value := .Values.clickhouse.configmap.users.user }}
+        {{- with . }}
+            <{{ .name }}>
+            {{- range $k_1, $v_1 := .config }}
+            {{- if (eq "networks" $k_1) }}
+                <networks incl="networks" replace="replace">
+                {{- range $v_1 }}
+                {{- with .}}
+                    <ip>{{ . }}</ip>
+                {{- end }}
+                {{- end }}
+                </networks>
+            {{- else }}
+                <{{ $k_1 }}>{{ $v_1 }}</{{ $k_1 }}>
+            {{- end }}
+            {{- end }}
+            </{{ .name }}>
+        {{- end }}
+        {{- end }}
+        </users>
+    {{- end }}
+
+    {{- if .Values.clickhouse.configmap.quotas.enabled }}
+        <quotas>
+        {{- range $key, $value := .Values.clickhouse.configmap.quotas.quota }}
+        {{- with . }}
+            <{{ .name }}>
+            {{- range $val := .config }}
+            {{- range $k_1, $v_1 := $val }}
+                <{{ $k_1 }}>{{ $v_1 }}</{{ $k_1 }}>
+            {{- end }}
+            {{- end }}
+            </{{ .name }}>
+        {{- end }}
+        {{- end }}
+        </quotas>
     </yandex>
 {{- end }}
