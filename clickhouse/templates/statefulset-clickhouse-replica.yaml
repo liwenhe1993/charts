@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}-replica
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
-  replicas: {{ .Values.clickhouse.replicas }}
+  replicas: {{ .Values.clickhouse.shards }}
   podManagementPolicy: {{ .Values.clickhouse.podManagementPolicy }}
   updateStrategy:
     type: {{ .Values.clickhouse.updateStrategy }}
@@ -47,7 +47,19 @@ spec:
         - /bin/sh
         - -c
         - |
-          mkdir -p /etc/clickhouse-server/metrica.d
+          sh /mnt/script.d/echoScript.sh
+        resources:
+          requests:
+            cpu: 1
+            memory: 256Mi
+          limits:
+            cpu: 1
+            memory: 256Mi
+        volumeMounts:
+        - name: {{ include "clickhouse.fullname" . }}-macros
+          mountPath: /etc/clickhouse-server/config.d
+        - name: {{ include "clickhouse.fullname" . }}-macros-script
+          mountPath: /mnt/script.d
       containers:
       - name: {{ include "clickhouse.fullname" . }}-replica
         image: {{ .Values.clickhouse.image }}:{{ .Values.clickhouse.imageVersion }}
@@ -79,17 +91,26 @@ spec:
           failureThreshold: {{ .Values.clickhouse.readinessProbe.failureThreshold }}
           successThreshold: {{ .Values.clickhouse.readinessProbe.successThreshold }}
       {{- end }}
+      {{- if .Values.clickhouse.resources.enabled }}
+        resources:
+          requests:
+            memory: {{ .Values.clickhouse.resources.requests.memory}}
+            cpu: {{ .Values.clickhouse.resources.requests.cpu }}
+          limits:
+            memory: {{ .Values.clickhouse.resources.limits.memory }}
+            cpu: {{ .Values.clickhouse.resources.limits.cpu }}
+      {{- end }}
         volumeMounts:
         - name: {{ include "clickhouse.fullname" . }}-replica-data
           mountPath: {{ include "clickhouse.fullpath" . }}
         - name: {{ include "clickhouse.fullname" . }}-replica-logs
           mountPath: {{ include "clickhouse.logpath" . }}
         - name: {{ include "clickhouse.fullname" . }}-config
+          mountPath: /etc/clickhouse-server
+        - name: {{ include "clickhouse.fullname" . }}-macros
           mountPath: /etc/clickhouse-server/config.d
-        - name: {{ include "clickhouse.fullname" . }}-metrica
-          mountPath: /etc/clickhouse-server/metrica.d
-        - name: {{ include "clickhouse.fullname" . }}-users
-          mountPath: /etc/clickhouse-server/users.d
+        - name: {{ include "clickhouse.fullname" . }}-macros-script
+          mountPath: /etc/clickhouse-server/script.d
         securityContext:
           privileged: true
           runAsUser: 0
@@ -120,21 +141,11 @@ spec:
       - name: {{ include "clickhouse.fullname" . }}-config
         configMap:
           name: {{ include "clickhouse.fullname" . }}-config
-          items:
-          - key: config.xml
-            path: config.xml
-      - name: {{ include "clickhouse.fullname" . }}-metrica
+      - name: {{ include "clickhouse.fullname" . }}-macros-script
         configMap:
-          name: {{ include "clickhouse.fullname" . }}-metrica
-          items:
-          - key: metrica.xml
-            path: metrica.xml
-      - name: {{ include "clickhouse.fullname" . }}-users
-        configMap:
-          name: {{ include "clickhouse.fullname" . }}-users
-          items:
-          - key: users.xml
-            path: users.xml
+          name: {{ include "clickhouse.fullname" . }}-macros-script
+      - name: {{ include "clickhouse.fullname" . }}-macros
+        emptyDir: {}
       {{- end }}
 {{- if .Values.clickhouse.persistentVolumeClaim.enabled }}
   volumeClaimTemplates:

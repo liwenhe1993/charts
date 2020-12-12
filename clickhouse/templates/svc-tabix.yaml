@@ -8,6 +8,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}-tabix
     app.kubernetes.io/managed-by: {{ .Release.Service }}
 spec:
+  type: LoadBalancer
   ports:
   - port: 80
     targetPort: http

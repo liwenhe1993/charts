@@ -1,0 +1,23 @@
+{{- if .Values.clickhouse.configmap.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "clickhouse.fullname" . }}-macros-script
+  labels:
+    app.kubernetes.io/name: {{ include "clickhouse.name" . }}-macros-script
+    app.kubernetes.io/instance: {{ .Release.Name }}-macros-script
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+data:
+  echoScript.sh: |-
+    #!/bin/sh
+    HOST=$(hostname)
+    SET_INDEX=${HOST##*-}
+    echo "<?xml version=\"1.0\"?>" >> /mnt/script.d/macros.xml
+    echo "<yandex>" >> /mnt/script.d/macros.xml
+    echo "    <macros>" >> /mnt/script.d/macros.xml
+    echo "        <shard>${SET_INDEX}</shard>" >> /mnt/script.d/macros.xml
+    echo "        <replica>${HOST}</replica>" >> /mnt/script.d/macros.xml
+    echo "    </macros>" >> /mnt/script.d/macros.xml
+    echo "</yandex>" >> /mnt/script.d/macros.xml
+    cp /mnt/script.d/macros.xml /etc/clickhouse-server/config.d/macros.xml
+{{- end }}
