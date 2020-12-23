@@ -1,4 +1,5 @@
 appVersion: "19.14"
+apiVersion: v2
 description: ClickHouse is an open source column-oriented database management system
   capable of real time generation of analytical data reports using SQL queries
 home: https://clickhouse.yandex/
