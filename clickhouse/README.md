@@ -1,8 +1,9 @@
-# ClickHouse
+# Yandex ClickHouse
 
 [ClickHouse](https://clickhouse.yandex/) is an open source column-oriented database management system capable of real time generation of analytical data reports using SQL queries.
 
 ## Introduction
+
 This chart bootstraps a [ClickHouse](https://clickhouse.yandex/) replication cluster deployment on a [Kubernetes](http://kubernetes.io) cluster using the [Helm](https://helm.sh) package manager.
 
 ## Prerequisites
@@ -15,10 +16,11 @@ This chart bootstraps a [ClickHouse](https://clickhouse.yandex/) replication clu
 To install the chart with the release name `my-release`:
 
 ```bash
-$ helm repo add liwenhe https://liwenhe1993.github.io/charts/
-$ helm repo update
-$ helm install --name clickhouse liwenhe/clickhouse
+helm repo add liwenhe https://liwenhe1993.github.io/charts/
+helm repo update
+helm install --name clickhouse liwenhe/clickhouse
 ```
+
 These commands deploy Clickhouse on the Kubernetes cluster in the default configuration. The [configuration](#configuration) section lists the parameters that can be configured during installation.
 
 > **Tip**: List all releases using `helm list`
@@ -28,7 +30,7 @@ These commands deploy Clickhouse on the Kubernetes cluster in the default config
 To uninstall/delete the `clickhouse` deployment:
 
 ```bash
-$ helm delete --purge clickhouse
+helm delete --purge clickhouse
 ```
 
 The command removes all the Kubernetes components associated with the chart and deletes the release.
@@ -66,20 +68,20 @@ The following tables lists the configurable parameters of the Clickhouse chart a
 | `clickhouse.readinessProbe.failureThreshold`                                      | Minimum consecutive successes for the probe                                                                                    | `3`                                                   |
 | `clickhouse.readinessProbe.successThreshold`                                      | Minimum consecutive failures for the probe                                                                                     | `1`                                                   |
 | `clickhouse.persistentVolumeClaim.enabled`                                        | Enable persistence using a `PersistentVolumeClaim`                                                                             | `false`                                               |
-| `clickhouse.persistentVolumeClaim.dataPersistentVolume.enabled`                   | Turn on and off dataPersistentVolume                                                                                           | `false`                                               |          
-| `clickhouse.persistentVolumeClaim.dataPersistentVolume.accessModes`               | Persistent Volume Access Modes                                                                                                 | `[ReadWriteOnce]`                                     |                  
-| `clickhouse.persistentVolumeClaim.dataPersistentVolume.storageClassName`          | Persistent Volume Storage Class                                                                                                | ``                                                    |                  
-| `clickhouse.persistentVolumeClaim.dataPersistentVolume.storage`                   | Persistent Volume Size                                                                                                         | `500Gi`                                               |                  
-| `clickhouse.persistentVolumeClaim.logsPersistentVolume.enabled`                   | Turn on and off dataPersistentVolume                                                                                           | `false`                                               |          
-| `clickhouse.persistentVolumeClaim.logsPersistentVolume.accessModes`               | Persistent Volume Access Modes                                                                                                 | `[ReadWriteOnce]`                                     |                  
-| `clickhouse.persistentVolumeClaim.logsPersistentVolume.storageClassName`          | Persistent Volume Storage Class                                                                                                | ``                                                    |                  
-| `clickhouse.persistentVolumeClaim.logsPersistentVolume.storage`                   | Persistent Volume Size                                                                                                         | `50Gi`                                                |                  
+| `clickhouse.persistentVolumeClaim.dataPersistentVolume.enabled`                   | Turn on and off dataPersistentVolume                                                                                           | `false`                                               |
+| `clickhouse.persistentVolumeClaim.dataPersistentVolume.accessModes`               | Persistent Volume Access Modes                                                                                                 | `[ReadWriteOnce]`                                     |
+| `clickhouse.persistentVolumeClaim.dataPersistentVolume.storageClassName`          | Persistent Volume Storage Class                                                                                                |
+| `clickhouse.persistentVolumeClaim.dataPersistentVolume.storage`                   | Persistent Volume Size                                                                                                         | `500Gi`                                               |
+| `clickhouse.persistentVolumeClaim.logsPersistentVolume.enabled`                   | Turn on and off dataPersistentVolume                                                                                           | `false`                                               |
+| `clickhouse.persistentVolumeClaim.logsPersistentVolume.accessModes`               | Persistent Volume Access Modes                                                                                                 | `[ReadWriteOnce]`                                     |
+| `clickhouse.persistentVolumeClaim.logsPersistentVolume.storageClassName`          | Persistent Volume Storage Class                                                                                                |     |
+| `clickhouse.persistentVolumeClaim.logsPersistentVolume.storage`                   | Persistent Volume Size                                                                                                         | `50Gi`                                                |
 | `clickhouse.ingress.enabled`                                                      | Enable ingress                                                                                                                 | `false`                                               |
-| `clickhouse.ingress.host`                                                         | Ingress host                                                                                                                   | ``                                                    |
-| `clickhouse.ingress.path`                                                         | Ingress path                                                                                                                   | ``                                                    |
+| `clickhouse.ingress.host`                                                         | Ingress host                                                                                                                   | |
+| `clickhouse.ingress.path`                                                         | Ingress path                                                                                                                   | |
 | `clickhouse.ingress.tls.enabled`                                                  | Enable ingress tls                                                                                                             | `false`                                               |
 | `clickhouse.ingress.tls.hosts`                                                    | Ingress tls hosts                                                                                                              | `[]`                                                  |
-| `clickhouse.ingress.tls.secretName`                                               | Ingress tls `secretName`                                                                                                       | ``                                                    |
+| `clickhouse.ingress.tls.secretName`                                               | Ingress tls `secretName`                                                                                                       | |
 | `clickhouse.configmap.enabled`                                                    | If Configmap's enabled is `true`, Custom `config.xml`, `metrica.xml` and `users.xml`                                           | `true`                                                |
 | `clickhouse.configmap.max_connections`                                            | The maximum number of inbound connections                                                                                      | `4096`                                                |
 | `clickhouse.configmap.keep_alive_timeout`                                         | The number of seconds that ClickHouse waits for incoming requests before closing the connection                                | `3`                                                   |
@@ -92,8 +94,8 @@ The following tables lists the configurable parameters of the Clickhouse chart a
 | `clickhouse.configmap.max_session_timeout`                                        | Maximum session timeout, in seconds                                                                                            | `3600`                                                |
 | `clickhouse.configmap.default_session_timeout`                                    | Default session timeout, in seconds                                                                                            | `60`                                                  |
 | `clickhouse.configmap.disable_internal_dns_cache`                                 | Uncomment to disable ClickHouse internal DNS caching                                                                           | `1`                                                   |
-| `clickhouse.configmap.max_open_files`                                             | The maximum number of open files                                                                                               | ``                                                    |
-| `clickhouse.configmap.interserver_http_host`                                      | The host name that can be used by other servers to access this server                                                          | ``                                                    |
+| `clickhouse.configmap.max_open_files`                                             | The maximum number of open files                                                                                               | |
+| `clickhouse.configmap.interserver_http_host`                                      | The host name that can be used by other servers to access this server                                                          | |
 | `clickhouse.configmap.logger.path`                                                | The log file path                                                                                                              | `/var/log/clickhouse-server`                          |
 | `clickhouse.configmap.logger.level`                                               | Logging level. Acceptable values: trace, debug, information, warning, error                                                    | `trace`                                               |
 | `clickhouse.configmap.logger.size`                                                | Size of the file                                                                                                               | `1000M`                                               |
@@ -105,11 +107,11 @@ The following tables lists the configurable parameters of the Clickhouse chart a
 | `clickhouse.configmap.zookeeper_servers.enabled`                                  | Enable contains settings that allow ClickHouse to interact with a ZooKeeper cluster                                            | `false`                                               |
 | `clickhouse.configmap.zookeeper_servers.session_timeout_ms`                       | Maximum timeout for the client session in milliseconds                                                                         | `30000`                                               |
 | `clickhouse.configmap.zookeeper_servers.operation_timeout_ms`                     | Operation timeout for the client session in milliseconds                                                                       | `10000`                                               |
-| `clickhouse.configmap.zookeeper_servers.root`                                     | The znode that is used as the root for znodes used by the ClickHouse server. Optional                                          | ``                                                    |
-| `clickhouse.configmap.zookeeper_servers.identity`                                 | User and password, that can be required by ZooKeeper to give access to requested znodes. Optional                              | ``                                                    |
-| `clickhouse.configmap.zookeeper_servers.config[].index`                           | ZooKeeper index                                                                                                                | ``                                                    |
-| `clickhouse.configmap.zookeeper_servers.config[].host`                            | ZooKeeper host                                                                                                                 | ``                                                    |
-| `clickhouse.configmap.zookeeper_servers.config[].port`                            | ZooKeeper port                                                                                                                 | ``                                                    |
+| `clickhouse.configmap.zookeeper_servers.root`                                     | The znode that is used as the root for znodes used by the ClickHouse server. Optional                                          | |
+| `clickhouse.configmap.zookeeper_servers.identity`                                 | User and password, that can be required by ZooKeeper to give access to requested znodes. Optional                              | |
+| `clickhouse.configmap.zookeeper_servers.config[].index`                           | ZooKeeper index                                                                                                                | |
+| `clickhouse.configmap.zookeeper_servers.config[].host`                            | ZooKeeper host                                                                                                                 | |
+| `clickhouse.configmap.zookeeper_servers.config[].port`                            | ZooKeeper port                                                                                                                 | |
 | `clickhouse.configmap.remote_servers.enabled`                                     | Enable configuration of clusters used by the Distributed table engine                                                          | `true`                                                |
 | `clickhouse.configmap.remote_servers.internal_replication`                        | If this parameter is set to 'true', the table where data will be written is going to replicate them itself                     | `false`                                               |
 | `clickhouse.configmap.remote_servers.replica.user`                                | Name of the user for connecting to a remote server. Access is configured in the users.xml file.                                | `default`                                             |
@@ -125,13 +127,13 @@ The following tables lists the configurable parameters of the Clickhouse chart a
 | `clickhouse.configmap.remote_servers.graphite.config[].events_cumulative`         | Sending cumulative data from a :ref:system_tables-system.events table                                                          | `true`                                                |
 | `clickhouse.configmap.remote_servers.graphite.config[].asynchronous_metrics`      | Sending data from a :ref:system_tables-system.asynchronous_metrics table                                                       | `true`                                                |
 | `clickhouse.configmap.profiles.enabled`                                           | Enable a settings profiles                                                                                                     | `false`                                               |
-| `clickhouse.configmap.profiles.profile[].name`                                    | Tne name of a settings profile                                                                                                 | ``                                                    |
+| `clickhouse.configmap.profiles.profile[].name`                                    | Tne name of a settings profile                                                                                                 | |
 | `clickhouse.configmap.profiles.profile[].config`                                  | The config of a settings profile                                                                                               | `{}`                                                  |
 | `clickhouse.configmap.users.enabled`                                              | Enable a settings users                                                                                                        | `false`                                               |
-| `clickhouse.configmap.users.user[].name`                                          | Tne name of a settings user                                                                                                    | ``                                                    |
+| `clickhouse.configmap.users.user[].name`                                          | Tne name of a settings user                                                                                                    | |
 | `clickhouse.configmap.users.user[].config`                                        | Tne config of a settings user                                                                                                  | `{}`                                                  |
 | `clickhouse.configmap.quotas.enabled`                                             | Enable a settings quotas                                                                                                       | `false`                                               |
-| `clickhouse.configmap.quotas.quota[].name`                                        | Tne name of a settings quota                                                                                                   | ``                                                    |
+| `clickhouse.configmap.quotas.quota[].name`                                        | Tne name of a settings quota                                                                                                   | |
 | `clickhouse.configmap.quotas.quota[].config[]`                                    | Tne config of a settings quota                                                                                                 | `[]`                                                  |
 | `tabix.enabled`                                                                   | Enable tabix                                                                                                                   | `false`                                               |
 | `tabix.replicas`                                                                  | The instance number of Tabix                                                                                                   | `1`                                                   |
@@ -155,14 +157,14 @@ The following tables lists the configurable parameters of the Clickhouse chart a
 | `tabix.readinessProbe.successThreshold`                                           | Minimum consecutive failures for the probe                                                                                     | `1`                                                   |
 | `tabix.security.user`                                                             | Tabix login username                                                                                                           | `admin`                                               |
 | `tabix.security.password`                                                         | Tabix login password                                                                                                           | `admin`                                               |
-| `tabix.automaticConnection.chName`                                                | Automatic connection Clickhouse name                                                                                           | ``                                                    |
-| `tabix.automaticConnection.chHost`                                                | Automatic connection Clickhouse host                                                                                           | ``                                                    |
-| `tabix.automaticConnection.chLogin`                                               | Automatic connection Clickhouse login username                                                                                 | ``                                                    |
-| `tabix.automaticConnection.chPassword`                                            | Automatic connection Clickhouse login password                                                                                 | ``                                                    |
-| `tabix.automaticConnection.chParams`                                              | Automatic connection Clickhouse params                                                                                         | ``                                                    |
+| `tabix.automaticConnection.chName`                                                | Automatic connection Clickhouse name                                                                                           | |
+| `tabix.automaticConnection.chHost`                                                | Automatic connection Clickhouse host                                                                                           | |
+| `tabix.automaticConnection.chLogin`                                               | Automatic connection Clickhouse login username                                                                                 | |
+| `tabix.automaticConnection.chPassword`                                            | Automatic connection Clickhouse login password                                                                                 | |
+| `tabix.automaticConnection.chParams`                                              | Automatic connection Clickhouse params                                                                                         | |
 | `tabix.ingress.enabled`                                                           | Enable ingress                                                                                                                 | `false`                                               |
-| `tabix.ingress.host`                                                              | Ingress host                                                                                                                   | ``                                                    |
-| `tabix.ingress.path`                                                              | Ingress path                                                                                                                   | ``                                                    |
+| `tabix.ingress.host`                                                              | Ingress host                                                                                                                   | |
+| `tabix.ingress.path`                                                              | Ingress path                                                                                                                   | |
 | `tabix.ingress.tls.enabled`                                                       | Enable ingress tls                                                                                                             | `false`                                               |
 | `tabix.ingress.tls.hosts`                                                         | Ingress tls hosts                                                                                                              | `[]`                                                  |
 

@@ -39,6 +39,14 @@ data:
                 {{- end }}
                 {{- end }}
                 </networks>
+            {{- else if (eq "allow_databases" $k_1) }}
+                <allow_databases>
+                {{- range $v_1 }}
+                {{- with .}}
+                    <database>{{ . }}</database>
+                {{- end }}
+                {{- end }}
+                </allow_databases>
             {{- else }}
                 <{{ $k_1 }}>{{ $v_1 }}</{{ $k_1 }}>
             {{- end }}

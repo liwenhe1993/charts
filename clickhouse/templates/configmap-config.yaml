@@ -61,11 +61,18 @@ data:
 
         {{- if .Values.clickhouse.configmap.logger }}
         <logger>
-            <level>{{ .Values.clickhouse.configmap.logger.level | default "trace" }}</level>
+            {{- if eq .Values.clickhouse.configmap.logger.type "console" }}
+            <level>{{ .Values.clickhouse.configmap.logger.console.level | default "trace" }}</level>
+            <console>1</console>
+            <log remove="remove"/>
+            <errorlog remove="remove"/>
+            {{- else if .Values.clickhouse.configmap.logger.type "file" }}
+            <level>{{ .Values.clickhouse.configmap.logger.file.level | default "trace" }}</level>
             <log>{{ printf "%s/%s" (include "clickhouse.logpath" .) "clickhouse-server.log" }}</log>
             <errorlog>{{ printf "%s/%s" (include "clickhouse.logpath" .) "clickhouse-server.err.log" }}</errorlog>
-            <size>{{ .Values.clickhouse.configmap.logger.size | default "1000M" }}</size>
-            <count>{{ .Values.clickhouse.configmap.logger.count | default "10" }}</count>
+            <size>{{ .Values.clickhouse.configmap.logger.file.size | default "1000M" }}</size>
+            <count>{{ .Values.clickhouse.configmap.logger.file.count | default "10" }}</count>
+            {{- end }}
         </logger>
         {{- end }}
 
